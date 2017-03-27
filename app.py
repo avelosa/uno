@@ -1,13 +1,14 @@
 import random
+import argparse
 
 # UNO in python
 class Uno:
     """ main game class """
-    
+
     def __init__(self, player_count):
-        self.players = [] 
-        
+        self.players = []
         self.deck = Deck()
+        self.current_card = ''
 
         # Initial deck of cards
         # 108 cards
@@ -18,7 +19,14 @@ class Uno:
         # 4 wild cards
         # 4 wild draw four cards
         self.setup_game(player_count)
-        self.start()
+        user_input = ''
+        print('To show a list of help options type `help`\n')
+        while user_input != 'exit':
+            user_input = raw_input('[UNO] Please enter a valid command:')
+            if (user_input == 'help'):
+                self.game_help()
+            if (user_input == 'start'):
+                self.start()
 
     def setup_game(self, player_count):
         i = 0
@@ -33,11 +41,23 @@ class Uno:
         return dict()
 
     def start(self):
-        # set color to match
+        begin = raw_input('Begin a new game of Uno? ')
+        if (begin == 'yes'):
+            # set color to match
+            print('Begin game!')
+            # flip over top card of deck
+            # create a discard pile
+            return
 
-        print('Begin game!')
+    def game_help(self):
+        help_table = {
+                'start': 'starts an uno game',
+                'exit': 'exits uno game session',
+                #'playing' : 'how to play the game'
+                }
+        for command, desc in help_table.items():
+            print('{0:10} - {1:10}').format(command, desc)
         return
-
 
 class Player:
     def __init__(self, number, hand):
@@ -49,7 +69,6 @@ class Player:
 
 class Card:
     """ UNO card object """
-    
     def __init__(self, color=''):
         self.color = color
         self.available = True
@@ -59,13 +78,12 @@ class Card:
 
 class NumCard(Card):
     """ Normal colored number card """
-    
     def __init__(self, color, num):
         self.num = num
 
 class DrawTwoCard(Card):
     """ Next player draws two cards of a specific color """
-    
+
 class ReverseCard(Card):
     """ Reverse the order of play direction """
 
@@ -90,7 +108,6 @@ class Deck:
         self.cards.append(self.create_num_cards('blue'))
         self.cards.append(self.create_num_cards('yellow'))
         self.cards.append(self.create_num_cards('green'))
-    
         # shuffle cards
         random.shuffle(self.cards)
 
@@ -113,7 +130,7 @@ class Deck:
         hand = []
         while(i < count):
             # pop returns last item in list
-            hand[i] = self.cards.pop() 
+            hand[i] = self.cards.pop()
             i += 1
 
         return hand
