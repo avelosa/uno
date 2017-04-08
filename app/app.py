@@ -38,29 +38,24 @@ class Uno:
             i += 1
 
     def game_loop(self):
-        '''move_options = {
-            'draw': draw(),
-            'cards': list_cards(),
-            'play': play(),
-            'end': end_turn(),
-        }'''
 
         print('current card: {card}').format(card=self.current_card.card_type())
         # main game loop
         for player in self.players:
+            is_turn = True
             move_prompt = 'player {number} move: '.format(number=player.number)
-            move = raw_input(move_prompt)
-            return
+            while (is_turn):
+                input_str = raw_input(move_prompt)
+                # create argument list
+                move = input_str.split()
 
-    # move methods
-    def draw_a_card(self):
-        return
-    def list_card(self):
-        return
-    def play_card(self):
-        return
-    def end_trun(self):
-        return
+                if (move[0] == 'play'):
+                    is_turn = False
+                    print 'next turn...'
+                    continue
+
+                if (move[0] == 'cards'):
+                    player.list_cards()
 
     def game_help(self):
         help_table = {

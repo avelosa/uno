@@ -2,7 +2,6 @@ class Card:
     """ UNO card object """
     def __init__(self):
         self.available = True
-        self.type = ''
 
     def isDrawn(self):
         self.available = False
@@ -52,10 +51,12 @@ class WildCard(Card):
     """  Player declares what color to match next """
     def __init__(self):
         self.type = 'wild'
+        self.color = 'grey'
 
 class WildDrawCard(WildCard):
     """ Next player draws 4 cards and current player declares what color to
     match next """
     def __init__(self):
         self.type = 'wild draw 4'
+        self.color = 'grey'
 
