@@ -37,6 +37,16 @@ class Uno:
             self.players.insert(i, Player(i, hand))
             i += 1
 
+    def play_card(self, card, player):
+        card_types = [c.card_type() for c in player.hand]
+        if (card in card_types):
+            # check if card is valid to play next
+            # discard card
+            print 'card in hand'
+            return True
+        print('{} not in hand, please try a different card').format(card)
+        return False
+
     def game_loop(self):
 
         print('current card: {card}').format(card=self.current_card.card_type())
@@ -50,9 +60,13 @@ class Uno:
                 move = input_str.split()
 
                 if (move[0] == 'play'):
-                    is_turn = False
-                    print 'next turn...'
-                    continue
+                    if len(move) == 2:
+                        is_valid_play = self.play_card(move[1], player)
+                        if is_valid_play:
+                            print 'next turn...'
+                            is_turn = False
+                            continue
+                    print('Invalid number of args: play <card>')
 
                 if (move[0] == 'cards'):
                     player.list_cards()
