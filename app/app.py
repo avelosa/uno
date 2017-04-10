@@ -1,3 +1,5 @@
+from termcolor import colored, cprint
+
 from deck import Deck
 from player import Player
 
@@ -9,7 +11,7 @@ class Uno:
         self.players = []
         self.deck = Deck()
         self.current_card = None
-        self.discard_pile = []
+        self.cards_played = []
 
         user_input = ''
         print('To show a list of help options type `help`\n')
@@ -41,15 +43,21 @@ class Uno:
         card_types = [c.card_type() for c in player.hand]
         if (card in card_types):
             # check if card is valid to play next
-            # discard card
+            # remove card from player's hand and add the card to the play pile
+            player.hand.remove(card)
+            self.cards_played.append(card)
             print 'card in hand'
             return True
         print('{} not in hand, please try a different card').format(card)
         return False
 
-    def game_loop(self):
+    def draw_card(self):
+        return
 
-        print('current card: {card}').format(card=self.current_card.card_type())
+    def game_loop(self):
+        curr_card_output = colored(self.current_card.card_type(),
+                self.current_card.color)
+        print('current card: {}').format(curr_card_output)
         # main game loop
         for player in self.players:
             is_turn = True
@@ -68,17 +76,26 @@ class Uno:
                             continue
                     print('Invalid number of args: play <card>')
 
+                if (move[0] == 'draw'):
+                    self.draw_card()
+
                 if (move[0] == 'cards'):
                     player.list_cards()
+
+                if (move[0] == 'help'):
+                    self.game_help()
 
     def game_help(self):
         help_table = {
                 'start': 'starts an uno game',
                 'exit': 'exits uno game session',
-                #'playing' : 'how to play the game'
+                'play <card>': 'play one card',
+                'cards': 'lists all cards in player\'s hand',
+                'draw': 'draw a card from the deck',
+                'current card': 'what the last card played was',
                 }
         for command, desc in help_table.items():
-            print('{0:10} - {1:10}').format(command, desc)
+            print('{0:12} - {1:10}').format(command, desc)
         return
 
 if __name__ == '__main__':

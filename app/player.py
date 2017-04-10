@@ -7,7 +7,7 @@ class Player:
         self.number = number
         self.points = 0
         # players hand of cards
-        self.hand = hand 
+        self.hand = hand
 
     def list_cards(self):
         for card in self.hand:
