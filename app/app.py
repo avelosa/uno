@@ -34,55 +34,70 @@ class Uno:
         while(i <= player_count):
             # each player is given 7 cards to begin with
             hand = self.deck.draw(7)
-            # build a list of Player objects each with their player number and
-            # hand of cards
             self.players.insert(i, Player(i, hand))
             i += 1
 
-    def play_card(self, card, player):
-        card_types = [c.card_type() for c in player.hand]
-        if (card in card_types):
-            # check if card is valid to play next
+    def play_card(self, card_name, player):
+        matching_cards = [c for c in player.hand if c.card_type() == card_name]
+        # check if card is valid to play next
+        if matching_cards != []:
+            card = matching_cards.pop()
             # remove card from player's hand and add the card to the play pile
             player.hand.remove(card)
             self.cards_played.append(card)
+            self.current_card = card
             print 'card in hand'
             return True
-        print('{} not in hand, please try a different card').format(card)
+
+        print('{} not in hand, draw or play another card').format(card_name)
         return False
 
-    def draw_card(self):
-        return
-
-    def game_loop(self):
+    def print_current_card(self):
         curr_card_output = colored(self.current_card.card_type(),
                 self.current_card.color)
         print('current card: {}').format(curr_card_output)
+
+    def game_loop(self):
+        self.print_current_card()
         # main game loop
         for player in self.players:
             is_turn = True
+            # TODO: check if current_card in play is a reverse or skip card
             move_prompt = 'player {number} move: '.format(number=player.number)
             while (is_turn):
+                # TODO: check if deck is empty
+                # TODO: check if current_card in play is a draw card
                 input_str = raw_input(move_prompt)
                 # create argument list
                 move = input_str.split()
 
                 if (move[0] == 'play'):
+                    print len(move)
                     if len(move) == 2:
                         is_valid_play = self.play_card(move[1], player)
-                        if is_valid_play:
-                            print 'next turn...'
-                            is_turn = False
-                            continue
-                    print('Invalid number of args: play <card>')
+                        if not is_valid_play:
+                            print('Invalid number of args: play <card>')
 
                 if (move[0] == 'draw'):
-                    self.draw_card()
+                    # darw 1 card from the game deck
+                    player.hand.append(self.deck.draw(1).pop())
 
                 if (move[0] == 'cards'):
                     player.list_cards()
 
+                if (move[0] == 'current_card'):
+                    self.print_current_card()
+
                 if (move[0] == 'help'):
+                    self.game_help()
+
+                if (move[0] == 'done'):
+                    print 'next turn...'
+                    is_turn = False
+                    continue
+
+                else:
+                    print 'invalid move'
                     self.game_help()
 
     def game_help(self):
@@ -92,7 +107,8 @@ class Uno:
                 'play <card>': 'play one card',
                 'cards': 'lists all cards in player\'s hand',
                 'draw': 'draw a card from the deck',
-                'current card': 'what the last card played was',
+                'current_card': 'what the last card played was',
+                'done': 'end player turn',
                 }
         for command, desc in help_table.items():
             print('{0:12} - {1:10}').format(command, desc)
