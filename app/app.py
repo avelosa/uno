@@ -3,6 +3,17 @@ from termcolor import colored, cprint
 from deck import Deck
 from player import Player
 
+main_help_table = {
+    'start': 'starts an uno game',
+    'exit': 'exits uno game session',
+}
+move_help_table = {
+    'play <card>': 'play one card',
+    'cards': 'lists all cards in player\'s hand',
+    'draw': 'draw a card from the deck',
+    'current_card': 'what the last card played was',
+    'done': 'end player turn',
+}
 # UNO in python
 class Uno:
     """ main game class """
@@ -18,7 +29,7 @@ class Uno:
         while user_input != 'exit':
             user_input = raw_input('[UNO] enter command:')
             if (user_input == 'help'):
-                self.game_help()
+                self.game_help(main_help_table)
             if (user_input == 'start'):
                 self.start(player_count)
 
@@ -78,39 +89,30 @@ class Uno:
                         if not is_valid_play:
                             print('Invalid number of args: play <card>')
 
-                if (move[0] == 'draw'):
+                elif (move[0] == 'draw'):
                     # darw 1 card from the game deck
                     player.hand.append(self.deck.draw(1).pop())
 
-                if (move[0] == 'cards'):
+                elif (move[0] == 'cards'):
                     player.list_cards()
 
-                if (move[0] == 'current_card'):
+                elif (move[0] == 'current_card'):
                     self.print_current_card()
 
-                if (move[0] == 'help'):
-                    self.game_help()
+                elif (move[0] == 'help'):
+                    self.game_help(move_help_table)
 
-                if (move[0] == 'done'):
+                elif(move[0] == 'done'):
                     print 'next turn...'
                     is_turn = False
                     continue
 
                 else:
                     print 'invalid move'
-                    self.game_help()
+                    self.game_help(move_help_table)
 
-    def game_help(self):
-        help_table = {
-                'start': 'starts an uno game',
-                'exit': 'exits uno game session',
-                'play <card>': 'play one card',
-                'cards': 'lists all cards in player\'s hand',
-                'draw': 'draw a card from the deck',
-                'current_card': 'what the last card played was',
-                'done': 'end player turn',
-                }
-        for command, desc in help_table.items():
+    def game_help(self, table):
+        for command, desc in table.items():
             print('{0:12} - {1:10}').format(command, desc)
         return
 
