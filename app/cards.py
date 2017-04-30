@@ -12,12 +12,11 @@ class Card:
 class NumCard(Card):
     """ Normal colored number card """
     def __init__(self, color, num):
-        self.type = 'number'
+        self.type = num
         self.color = color
-        self.num = num
 
     def card_type(self):
-        return '{color}{num}'.format(color=self.color, num=self.num)
+        return '{color}{num}'.format(color=self.color, num=self.type)
 
 class DrawTwoCard(Card):
     """ Next player draws two cards of a specific color """
